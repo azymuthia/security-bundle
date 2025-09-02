@@ -6,8 +6,8 @@ namespace Azymuthia\SecurityBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Azymuthia\SecurityBundle\DependencyInjection\AzymuthiaSecurityExtension;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
+use Azymuthia\SecurityBundle\DependencyInjection\AzymuthiaSecurityExtension;
 use Azymuthia\SecurityBundle\DependencyInjection\Compiler\AppUserAutowirePass;
 
 final class AzymuthiaSecurityBundle extends Bundle

@@ -9,13 +9,13 @@ use Symfony\Component\Uid\Uuid;
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Lexik\Bundle\JWTAuthenticationBundle\Events as JWTEvents;
-use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
-use Azymuthia\SecurityBundle\Contract\AppUserRepositoryInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTDecodedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTInvalidEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTNotFoundEvent;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
+use Azymuthia\SecurityBundle\Contract\AppUserRepositoryInterface;
 
 #[AsEventListener(event: Events::JWT_DECODED, method: 'onJwtDecoded')]
 #[AsEventListener(event: Events::JWT_INVALID, method: 'onJwtInvalid')]

@@ -9,11 +9,11 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Uid\Uuid;
 use Azymuthia\SecurityBundle\Contract\AppUserInterface;
 use Azymuthia\SecurityBundle\Security\JwtEventSubscriber;
-use Azymuthia\SecurityBundle\Contract\AppUserRepositoryInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTDecodedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTInvalidEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTNotFoundEvent;
+use Azymuthia\SecurityBundle\Contract\AppUserRepositoryInterface;
 
 /**
  * @internal

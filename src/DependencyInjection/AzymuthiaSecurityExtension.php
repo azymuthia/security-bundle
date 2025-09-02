@@ -6,9 +6,9 @@ namespace Azymuthia\SecurityBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Azymuthia\SecurityBundle\Contract\AppUserRepositoryInterface;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
+use Azymuthia\SecurityBundle\Contract\AppUserRepositoryInterface;
 
 final class AzymuthiaSecurityExtension extends Extension
 {
