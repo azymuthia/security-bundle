@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Aquila\SecurityBundle;
+namespace Azymuthia\SecurityBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Aquila\SecurityBundle\DependencyInjection\AquilaSecurityExtension;
+use Azymuthia\SecurityBundle\DependencyInjection\AzymuthiaSecurityExtension;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
-use Aquila\SecurityBundle\DependencyInjection\Compiler\AppUserAutowirePass;
+use Azymuthia\SecurityBundle\DependencyInjection\Compiler\AppUserAutowirePass;
 
-final class AquilaSecurityBundle extends Bundle
+final class AzymuthiaSecurityBundle extends Bundle
 {
     public function build(ContainerBuilder $container): void
     {
@@ -20,6 +20,6 @@ final class AquilaSecurityBundle extends Bundle
 
     public function getContainerExtension(): ?ExtensionInterface
     {
-        return new AquilaSecurityExtension();
+        return new AzymuthiaSecurityExtension();
     }
 }

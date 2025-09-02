@@ -1,4 +1,4 @@
-# Aquila Security Bundle
+# Azymuthia Security Bundle
 
 Domain-agnostic JWT integration for Symfony 7 with optional wiring of an application user.
 
@@ -11,7 +11,7 @@ Domain-agnostic JWT integration for Symfony 7 with optional wiring of an applica
 Add to your composer.json in the client app (once the package is published):
 
 ```
-"aquila/security-bundle": "^1.0"
+"azymuthia/security-bundle": "^1.0"
 ```
 
 Register the bundle (if Flex doesn’t do it automatically):
@@ -20,7 +20,7 @@ Register the bundle (if Flex doesn’t do it automatically):
 // config/bundles.php
 return [
     // ...
-    Aquila\SecurityBundle\AquilaSecurityBundle::class => ['all' => true],
+    Azymuthia\SecurityBundle\AzymuthiaSecurityBundle::class => ['all' => true],
 ];
 ```
 
@@ -35,7 +35,7 @@ security:
   providers:
     jwt:
       lexik_jwt:
-        class: Aquila\SecurityBundle\Security\JWTUser
+        class: Azymuthia\SecurityBundle\Security\JWTUser
 
   firewalls:
     main:
@@ -45,7 +45,7 @@ security:
 ```
 
 Notes:
-- Do NOT add manual service tags for your app user repositories. Autoconfiguration will automatically tag any implementation of Aquila\SecurityBundle\Contract\AppUserRepositoryInterface with `aquila.security.app_user_repository`.
+- Do NOT add manual service tags for your app user repositories. Autoconfiguration will automatically tag any implementation of Azymuthia\SecurityBundle\Contract\AppUserRepositoryInterface with `azymuthia.security.app_user_repository`.
 - If your application provides a repository implementing the interface above, the bundle will best‑effort attach `appUser` to the JWT payload during JWT decoding. If you don’t provide any repository, the bundle works in JWT‑only mode (no `appUser` attached).
 
 ## Optional: App user repository
@@ -59,8 +59,8 @@ declare(strict_types=1);
 namespace App\Security\Repository;
 
 use Symfony\Component\Uid\Uuid;
-use Aquila\SecurityBundle\Contract\AppUserInterface;
-use Aquila\SecurityBundle\Contract\AppUserRepositoryInterface;
+use Azymuthia\SecurityBundle\Contract\AppUserInterface;
+use Azymuthia\SecurityBundle\Contract\AppUserRepositoryInterface;
 
 final readonly class YourAppUserRepository implements AppUserRepositoryInterface
 {
@@ -76,11 +76,11 @@ Autoconfiguration will take care of tagging; no YAML/XML is needed.
 ## JWT-only mode
 If you don’t implement AppUserRepositoryInterface, the bundle still works:
 - JwtEventSubscriber won’t attach any domain user to the payload;
-- Aquila\SecurityBundle\Security\JWTUser will have `appUser = null`.
+- Azymuthia\SecurityBundle\Security\JWTUser will have `appUser = null`.
 
 ## Snippet: PlayerAppUserRepository adapter (copy-paste)
 Poniższy przykład pokazuje, jak w aplikacji klienckiej dodać adapter repozytorium dla encji Player. Adapter implementuje
-Aquila\SecurityBundle\Contract\AppUserRepositoryInterface i deleguje do App\Infrastructure\Doctrine\Repository\PlayerRepository.
+Azymuthia\SecurityBundle\Contract\AppUserRepositoryInterface i deleguje do App\Infrastructure\Doctrine\Repository\PlayerRepository.
 Autokonfiguracja automatycznie doda wymagany tag – nie dodawaj żadnych ręcznych tagów.
 
 ```php
@@ -91,8 +91,8 @@ declare(strict_types=1);
 namespace App\Security\Repository;
 
 use Symfony\Component\Uid\Uuid;
-use Aquila\SecurityBundle\Contract\AppUserInterface;
-use Aquila\SecurityBundle\Contract\AppUserRepositoryInterface;
+use Azymuthia\SecurityBundle\Contract\AppUserInterface;
+use Azymuthia\SecurityBundle\Contract\AppUserRepositoryInterface;
 use App\Infrastructure\Doctrine\Repository\PlayerRepository;
 
 final readonly class PlayerAppUserRepository implements AppUserRepositoryInterface
@@ -108,7 +108,7 @@ final readonly class PlayerAppUserRepository implements AppUserRepositoryInterfa
 ```
 
 ### Player implements AppUserInterface
-Upewnij się, że encja Player implementuje Aquila\SecurityBundle\Contract\AppUserInterface. Zazwyczaj wymaga to:
+Upewnij się, że encja Player implementuje Azymuthia\SecurityBundle\Contract\AppUserInterface. Zazwyczaj wymaga to:
 - dodania `implements AppUserInterface` do klasy encji,
 - zapewnienia metody `getUserId(): Uuid` (zwykle już istnieje),
 - dodania metody `getRoles(): array` (może zwracać pustą tablicę, jeśli role są tylko w JWT),
@@ -117,7 +117,7 @@ Upewnij się, że encja Player implementuje Aquila\SecurityBundle\Contract\AppUs
 Przykład minimalny w encji Player:
 
 ```php
-use Aquila\SecurityBundle\Contract\AppUserInterface;
+use Azymuthia\SecurityBundle\Contract\AppUserInterface;
 use Symfony\Component\Uid\Uuid;
 
 class Player implements \Stringable, AppUserInterface
@@ -140,7 +140,7 @@ class Player implements \Stringable, AppUserInterface
 ```
 
 To wszystko – dzięki autokonfiguracji Symfony 7.3+ każda implementacja AppUserRepositoryInterface zostanie
-automatycznie oznaczona tagiem `aquila.security.app_user_repository`, więc nie jest potrzebna żadna dodatkowa konfiguracja.
+automatycznie oznaczona tagiem `azymuthia.security.app_user_repository`, więc nie jest potrzebna żadna dodatkowa konfiguracja.
 
 ## Copy-paste: security.yaml change
 W aplikacji-kliencie podmień konfigurację providera JWT tak, aby używała klasy z bundle:
@@ -150,7 +150,7 @@ security:
   providers:
     jwt:
       lexik_jwt:
-        class: Aquila\SecurityBundle\Security\JWTUser
+        class: Azymuthia\SecurityBundle\Security\JWTUser
 ```
 
 Przypomnienie: usuń lub wyłącz stary aplikacyjny JwtSubscriber (np. App\Application\EventSubscriber\JwtSubscriber). Bundle rejestruje własny JwtEventSubscriber automatycznie.
@@ -166,12 +166,12 @@ Minimum versions (recap):
 - lexik/jwt-authentication-bundle: ^2.20
 
 ### 1) Prepare a private GitHub repository
-- Create a new private repo, e.g. github.com/your-org/aquila-security-bundle.
+- Create a new private repo, e.g. github.com/your-org/azymuthia-security-bundle.
 - Initialize it with this package’s code (packages/security-bundle).
 - Set remote and push:
 
 ```bash
-git remote add origin git@github.com:your-org/aquila-security-bundle.git
+git remote add origin git@github.com:your-org/azymuthia-security-bundle.git
 git push -u origin main
 ```
 
@@ -195,7 +195,7 @@ composer config -g github-oauth.github.com YOUR_GH_TOKEN
 - Then require the package normally in the app:
 
 ```bash
-composer require aquila/security-bundle:"^1.0"
+composer require azymuthia/security-bundle:"^1.0"
 ```
 
 B) Use a direct VCS repository entry (no Packagist required):
@@ -204,10 +204,10 @@ B) Use a direct VCS repository entry (no Packagist required):
 ```json
 {
   "repositories": [
-    { "type": "vcs", "url": "git@github.com:your-org/aquila-security-bundle.git" }
+    { "type": "vcs", "url": "git@github.com:your-org/azymuthia-security-bundle.git" }
   ],
   "require": {
-    "aquila/security-bundle": "^1.0"
+    "azymuthia/security-bundle": "^1.0"
   }
 }
 ```
@@ -215,7 +215,7 @@ B) Use a direct VCS repository entry (no Packagist required):
 - Then run:
 
 ```bash
-composer update aquila/security-bundle
+composer update azymuthia/security-bundle
 ```
 
 ### 3) Example GitHub Actions CI for the bundle (phpstan, php-cs-fixer, phpunit)
@@ -275,7 +275,7 @@ Add to your application’s composer.json:
     { "type": "path", "url": "packages/security-bundle", "options": { "symlink": true } }
   ],
   "require": {
-    "aquila/security-bundle": "*@dev"
+    "azymuthia/security-bundle": "*@dev"
   }
 }
 ```
@@ -283,7 +283,7 @@ Add to your application’s composer.json:
 Then install/update only the bundle:
 
 ```bash
-composer update aquila/security-bundle
+composer update azymuthia/security-bundle
 ```
 
 Notes:

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Aquila\SecurityBundle\Contract;
+namespace Azymuthia\SecurityBundle\Contract;
 
 use Symfony\Component\Uid\Uuid;
 

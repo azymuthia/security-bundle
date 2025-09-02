@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Aquila\SecurityBundle\Security;
+namespace Azymuthia\SecurityBundle\Security;
 
 use Symfony\Component\Uid\Uuid;
-use Aquila\SecurityBundle\Contract\AppUserInterface;
+use Azymuthia\SecurityBundle\Contract\AppUserInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\User\JWTUserInterface;
 
 /**

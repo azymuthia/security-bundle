@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Aquila\SecurityBundle\Tests\Security;
+namespace Azymuthia\SecurityBundle\Tests\Security;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Uid\Uuid;
-use Aquila\SecurityBundle\Security\JWTUser;
+use Azymuthia\SecurityBundle\Security\JWTUser;
 
 /**
  * @internal

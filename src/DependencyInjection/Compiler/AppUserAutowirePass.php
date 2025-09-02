@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Aquila\SecurityBundle\DependencyInjection\Compiler;
+namespace Azymuthia\SecurityBundle\DependencyInjection\Compiler;
 
-use Aquila\SecurityBundle\Security\JwtEventSubscriber;
+use Azymuthia\SecurityBundle\Security\JwtEventSubscriber;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
@@ -24,7 +24,7 @@ final class AppUserAutowirePass implements CompilerPassInterface
 
         // Ensure the second constructor argument (iterable repositories) receives tagged iterator.
         // We use named argument if available otherwise index 1 (0-based: [urls, appUserRepositories]).
-        $tagged = new TaggedIteratorArgument('aquila.security.app_user_repository', null, null, true);
+        $tagged = new TaggedIteratorArgument('azymuthia.security.app_user_repository', null, null, true);
 
         // Try set by argument name first
         if (method_exists($definition, 'setArgument')) {

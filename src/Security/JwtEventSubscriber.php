@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Aquila\SecurityBundle\Security;
+namespace Azymuthia\SecurityBundle\Security;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Lexik\Bundle\JWTAuthenticationBundle\Events as JWTEvents;
-use Aquila\SecurityBundle\Contract\AppUserRepositoryInterface;
+use Azymuthia\SecurityBundle\Contract\AppUserRepositoryInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTDecodedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTInvalidEvent;

@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-namespace Aquila\SecurityBundle\DependencyInjection;
+namespace Azymuthia\SecurityBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Aquila\SecurityBundle\Contract\AppUserRepositoryInterface;
+use Azymuthia\SecurityBundle\Contract\AppUserRepositoryInterface;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 
-final class AquilaSecurityExtension extends Extension
+final class AzymuthiaSecurityExtension extends Extension
 {
     public function load(array $configs, ContainerBuilder $container): void
     {
         // Enable autoconfiguration for AppUserRepositoryInterface implementations
         $container->registerForAutoconfiguration(AppUserRepositoryInterface::class)
-            ->addTag('aquila.security.app_user_repository')
+            ->addTag('azymuthia.security.app_user_repository')
         ;
 
         // Load services from PHP config file if present (optional, minimal bundle keeps it empty)
@@ -30,6 +30,6 @@ final class AquilaSecurityExtension extends Extension
 
     public function getAlias(): string
     {
-        return 'aquila_security';
+        return 'azymuthia_security';
     }
 }

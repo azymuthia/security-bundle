@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Aquila\SecurityBundle\Tests\Security;
+namespace Azymuthia\SecurityBundle\Tests\Security;
 
 use Psr\Log\NullLogger;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Uid\Uuid;
-use Aquila\SecurityBundle\Contract\AppUserInterface;
-use Aquila\SecurityBundle\Security\JwtEventSubscriber;
-use Aquila\SecurityBundle\Contract\AppUserRepositoryInterface;
+use Azymuthia\SecurityBundle\Contract\AppUserInterface;
+use Azymuthia\SecurityBundle\Security\JwtEventSubscriber;
+use Azymuthia\SecurityBundle\Contract\AppUserRepositoryInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTDecodedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTInvalidEvent;

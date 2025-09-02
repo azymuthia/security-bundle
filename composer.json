@@ -1,6 +1,6 @@
 {
-  "name": "aquila/security-bundle",
-  "description": "Aquila Security Bundle: JWT integration and optional domain user wiring for Symfony 7.",
+  "name": "azymuthia/security-bundle",
+  "description": "Azymuthia Security Bundle: JWT integration and optional domain user wiring for Symfony 7.",
   "type": "symfony-bundle",
   "license": "proprietary",
   "require": {
@@ -9,9 +9,12 @@
     "symfony/security-bundle": "^7.3",
     "lexik/jwt-authentication-bundle": "^3.0"
   },
+  "require-dev": {
+    "roave/security-advisories": "dev-latest"
+  },
   "autoload": {
     "psr-4": {
-      "Aquila\\SecurityBundle\\": "src/"
+      "Azymuthia\\SecurityBundle\\": "src/"
     }
   },
   "minimum-stability": "stable",
