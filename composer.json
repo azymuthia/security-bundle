@@ -5,9 +5,10 @@
   "license": "proprietary",
   "require": {
     "php": ">=8.4",
+    "lexik/jwt-authentication-bundle": "^3.0",
     "symfony/framework-bundle": "^7.3",
     "symfony/security-bundle": "^7.3",
-    "lexik/jwt-authentication-bundle": "^3.0"
+    "symfony/uid": "^7.3"
   },
   "require-dev": {
     "roave/security-advisories": "dev-latest"
