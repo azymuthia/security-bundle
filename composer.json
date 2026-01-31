@@ -1,14 +1,14 @@
 {
   "name": "azymuthia/security-bundle",
-  "description": "Azymuthia Security Bundle: JWT integration and optional domain user wiring for Symfony 7.",
+  "description": "Azymuthia Security Bundle: JWT integration and optional domain user wiring for Symfony 7 and 8.",
   "license": "proprietary",
   "type": "symfony-bundle",
   "require": {
     "php": ">=8.4",
     "lexik/jwt-authentication-bundle": "^3.0",
-    "symfony/framework-bundle": "^7.3",
-    "symfony/security-bundle": "^7.3",
-    "symfony/uid": "^7.3"
+    "symfony/framework-bundle": "^7.4|^8.0",
+    "symfony/security-bundle": "^7.4|^8.0",
+    "symfony/uid": "^7.4|^8.0"
   },
   "require-dev": {
     "ergebnis/composer-normalize": "^2.48",
