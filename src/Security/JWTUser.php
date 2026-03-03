@@ -28,7 +28,7 @@ final class JWTUser implements JWTUserInterface
      * @param string[] $roles
      */
     private function __construct(
-        private readonly string $userIdentifier,
+        private readonly string $username,
         private readonly Uuid $userId,
         private readonly array $roles,
         private readonly ?string $name,
@@ -73,9 +73,9 @@ final class JWTUser implements JWTUserInterface
         return new self($username, $userId, $roles, $name, $appUser);
     }
 
-    public function getUserIdentifier(): string
+    public function getUsername(): string
     {
-        return $this->userIdentifier;
+        return $this->username;
     }
 
     /**

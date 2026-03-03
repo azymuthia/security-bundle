@@ -24,7 +24,7 @@ final class JWTUserTest extends TestCase
             'roles' => ['ROLE_USER', 'ROLE_EXTRALIGA'],
         ]);
 
-        self::assertSame('john', $user->getUserIdentifier());
+        self::assertSame('john', $user->getUsername());
         self::assertTrue($uuid->equals($user->getUserId()));
         self::assertSame(['ROLE_USER', 'ROLE_EXTRALIGA'], $user->getRoles());
         self::assertNull($user->getAppUser());

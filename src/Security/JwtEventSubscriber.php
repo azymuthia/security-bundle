@@ -75,6 +75,7 @@ final readonly class JwtEventSubscriber implements EventSubscriberInterface
             return;
         }
 
+        $payload['appUser'] = null;
         try {
             // Attempt fetching domain user; do not put the entity into JWT payload.
             // Hydration of JWTUser will not receive the entity from payload in this mode.
