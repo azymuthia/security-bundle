@@ -17,8 +17,8 @@ use function is_array;
  * Domain-agnostic JWT user representation for LexikJWT provider.
  *
  * Works in two modes:
- * - JWT-only: when only userId and roles are provided in payload, appUser remains null.
- * - With domain user attached: when payload is enriched by our subscriber with an AppUserInterface instance.
+ * - JWT-only: when only userId and roles are provided in the payload, appUser remains null.
+ * - With domain user attached: when the payload is enriched by our subscriber with an AppUserInterface instance.
  */
 final class JWTUser implements JWTUserInterface
 {
@@ -60,7 +60,7 @@ final class JWTUser implements JWTUserInterface
         $userId = $userIdRaw instanceof Uuid ? $userIdRaw : Uuid::fromString((string) $userIdRaw);
 
         // Normalize roles to string[]
-        $roles = array_values(array_map(static fn ($r) => (string) $r, $payload['roles']));
+        $roles = array_values(array_map('strval', $payload['roles']));
 
         $name = $payload['name'] ?? null;
 

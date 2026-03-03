@@ -20,7 +20,7 @@ final class AzymuthiaSecurityExtension extends Extension
             ->addTag('azymuthia.security.app_user_repository')
         ;
 
-        // Load services from PHP config file if present (optional, minimal bundle keeps it empty)
+        // Load services from the PHP config file if present (optional, minimal bundle keeps it empty)
         $loader = new PhpFileLoader($container, new FileLocator(__DIR__ . '/../../config'));
 
         try {

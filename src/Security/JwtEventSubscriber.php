@@ -50,7 +50,7 @@ final readonly class JwtEventSubscriber implements EventSubscriberInterface
         $userIdRaw = $payload['userId'] ?? null;
 
         if (null === $userIdRaw) {
-            // best-effort: leave payload unchanged
+            // best-effort: leave the payload unchanged
             $this->logger?->debug('JWT payload missing userId; skipping appUser enrichment');
 
             return;
@@ -67,7 +67,7 @@ final readonly class JwtEventSubscriber implements EventSubscriberInterface
             return;
         }
 
-        // Find first available repository (if any)
+        // Find the first available repository (if any)
         $repository = $this->firstRepositoryOrNull();
 
         if (null === $repository) {
@@ -82,7 +82,7 @@ final readonly class JwtEventSubscriber implements EventSubscriberInterface
             $payload['appUser'] = $repository->getOneByUserId($userId);
             $event->setPayload($payload);
         } catch (Throwable $e) {
-            // Best-effort: ignore any repository exceptions (e.g., EntityNotFound/AppUserNotFound)
+            // Best-effort: ignore any repository exceptions (e.g. EntityNotFound/AppUserNotFound)
             $this->logger?->debug('AppUser repository lookup failed; continuing without appUser', [
                 'exception' => $e::class,
                 'message' => $e->getMessage(),
