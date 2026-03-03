@@ -9,26 +9,25 @@ use Azymuthia\SecurityBundle\Event\UserIdDecodedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTDecodedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTInvalidEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTNotFoundEvent;
-use Lexik\Bundle\JWTAuthenticationBundle\Events;
 use Lexik\Bundle\JWTAuthenticationBundle\Events as JWTEvents;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Uid\Uuid;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Throwable;
 
-#[AsEventListener(event: Events::JWT_DECODED, method: 'onJwtDecoded')]
-#[AsEventListener(event: Events::JWT_INVALID, method: 'onJwtInvalid')]
-#[AsEventListener(event: Events::JWT_NOT_FOUND, method: 'onJwtNotFound')]
+#[AsEventListener(event: JWTEvents::JWT_DECODED, method: 'onJwtDecoded')]
+#[AsEventListener(event: JWTEvents::JWT_INVALID, method: 'onJwtInvalid')]
+#[AsEventListener(event: JWTEvents::JWT_NOT_FOUND, method: 'onJwtNotFound')]
 final readonly class JwtEventSubscriber implements EventSubscriberInterface
 {
     /** @param iterable<AppUserRepositoryInterface> $appUserRepositories */
     public function __construct(
         private UrlGeneratorInterface $urls,
-        private EventDispatcher $eventDispatcher,
+        private EventDispatcherInterface $eventDispatcher,
         private iterable $appUserRepositories = [],
         private ?LoggerInterface $logger = null,
     ) {}
