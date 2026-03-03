@@ -1,0 +1,5 @@
+services:
+  app:
+    image: caelumek/frankenphp:8.5-dev
+    volumes:
+      - ./:/app

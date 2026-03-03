@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Azymuthia\SecurityBundle\DependencyInjection\Compiler;
 
 use Azymuthia\SecurityBundle\Security\JwtEventSubscriber;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
+use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Compiler\PriorityTaggedServiceTrait;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 final class AppUserAutowirePass implements CompilerPassInterface
 {

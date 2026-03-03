@@ -4,18 +4,19 @@ declare(strict_types=1);
 
 namespace Azymuthia\SecurityBundle\Security;
 
-use Psr\Log\LoggerInterface;
-use Symfony\Component\Uid\Uuid;
-use Lexik\Bundle\JWTAuthenticationBundle\Events;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Lexik\Bundle\JWTAuthenticationBundle\Events as JWTEvents;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Azymuthia\SecurityBundle\Contract\AppUserRepositoryInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTDecodedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTInvalidEvent;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTNotFoundEvent;
+use Lexik\Bundle\JWTAuthenticationBundle\Events;
+use Lexik\Bundle\JWTAuthenticationBundle\Events as JWTEvents;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
-use Azymuthia\SecurityBundle\Contract\AppUserRepositoryInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Uid\Uuid;
+use Throwable;
 
 #[AsEventListener(event: Events::JWT_DECODED, method: 'onJwtDecoded')]
 #[AsEventListener(event: Events::JWT_INVALID, method: 'onJwtInvalid')]
@@ -45,6 +46,7 @@ final readonly class JwtEventSubscriber implements EventSubscriberInterface
 
         // Defensive: ensure userId exists and is a valid Uuid string/object
         $userIdRaw = $payload['userId'] ?? null;
+
         if (null === $userIdRaw) {
             // best-effort: leave payload unchanged
             $this->logger?->debug('JWT payload missing userId; skipping appUser enrichment');
@@ -54,7 +56,7 @@ final readonly class JwtEventSubscriber implements EventSubscriberInterface
 
         try {
             $userId = $userIdRaw instanceof Uuid ? $userIdRaw : Uuid::fromString((string) $userIdRaw);
-        } catch (\Throwable) {
+        } catch (Throwable) {
             // invalid UUID – ignore
             $this->logger?->debug('JWT payload has invalid userId; skipping appUser enrichment', ['userId' => $userIdRaw]);
 
@@ -63,6 +65,7 @@ final readonly class JwtEventSubscriber implements EventSubscriberInterface
 
         // Find first available repository (if any)
         $repository = $this->firstRepositoryOrNull();
+
         if (null === $repository) {
             // No repositories registered – supported scenario (JWT-only mode)
             return;
@@ -73,7 +76,7 @@ final readonly class JwtEventSubscriber implements EventSubscriberInterface
             // Hydration of JWTUser will not receive the entity from payload in this mode.
             $payload['appUser'] = $repository->getOneByUserId($userId);
             $event->setPayload($payload);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             // Best-effort: ignore any repository exceptions (e.g., EntityNotFound/AppUserNotFound)
             $this->logger?->debug('AppUser repository lookup failed; continuing without appUser', [
                 'exception' => $e::class,

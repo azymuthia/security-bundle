@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Azymuthia\SecurityBundle\Tests\Security;
 
+use Azymuthia\SecurityBundle\Security\JWTUser;
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Uid\Uuid;
-use Azymuthia\SecurityBundle\Security\JWTUser;
 
 /**
  * @internal
@@ -31,7 +32,7 @@ final class JWTUserTest extends TestCase
 
     public function testCreateFromPayloadInvalidWithoutRolesThrows(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         JWTUser::createFromPayload('john', [
             'userId' => Uuid::v4()->toRfc4122(),
         ]);
@@ -39,7 +40,7 @@ final class JWTUserTest extends TestCase
 
     public function testCreateFromPayloadInvalidWithoutUserIdThrows(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         JWTUser::createFromPayload('john', [
             'roles' => ['ROLE_USER'],
         ]);

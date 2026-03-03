@@ -4,9 +4,14 @@ declare(strict_types=1);
 
 namespace Azymuthia\SecurityBundle\Security;
 
-use Symfony\Component\Uid\Uuid;
 use Azymuthia\SecurityBundle\Contract\AppUserInterface;
+use Deprecated;
+use InvalidArgumentException;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\User\JWTUserInterface;
+use Symfony\Component\Uid\Uuid;
+
+use function array_key_exists;
+use function is_array;
 
 /**
  * Domain-agnostic JWT user representation for LexikJWT provider.
@@ -17,27 +22,18 @@ use Lexik\Bundle\JWTAuthenticationBundle\Security\User\JWTUserInterface;
  */
 final class JWTUser implements JWTUserInterface
 {
-    private readonly string $userIdentifier;
-
-    private readonly Uuid $userId;
-
-    /** @var string[] */
-    private readonly array $roles;
-
-    private readonly ?AppUserInterface $appUser;
-
     /**
      * Use factory createFromPayload.
      *
      * @param string[] $roles
      */
-    private function __construct(string $userIdentifier, Uuid $userId, array $roles, ?AppUserInterface $appUser)
-    {
-        $this->userIdentifier = $userIdentifier;
-        $this->userId = $userId;
-        $this->roles = $roles;
-        $this->appUser = $appUser;
-    }
+    private function __construct(
+        private readonly string $userIdentifier,
+        private readonly Uuid $userId,
+        private readonly array $roles,
+        private readonly ?string $name,
+        private readonly ?AppUserInterface $appUser,
+    ) {}
 
     /**
      * Factory used by Lexik to re-create user from token payload.
@@ -48,15 +44,16 @@ final class JWTUser implements JWTUserInterface
      * - 'appUser' (AppUserInterface) optional, set by our subscriber if available
      *
      * @param array<string,mixed> $payload
-     * @param mixed               $username
+     * @param mixed $username
      */
     public static function createFromPayload($username, array $payload): self
     {
-        if (!\array_key_exists('userId', $payload)) {
-            throw new \InvalidArgumentException('JWT payload is missing required key: userId');
+        if (!array_key_exists('userId', $payload)) {
+            throw new InvalidArgumentException('JWT payload is missing required key: userId');
         }
-        if (!\array_key_exists('roles', $payload) || !\is_array($payload['roles'])) {
-            throw new \InvalidArgumentException('JWT payload is missing required key: roles');
+
+        if (!array_key_exists('roles', $payload) || !is_array($payload['roles'])) {
+            throw new InvalidArgumentException('JWT payload is missing required key: roles');
         }
 
         $userIdRaw = $payload['userId'];
@@ -65,12 +62,15 @@ final class JWTUser implements JWTUserInterface
         // Normalize roles to string[]
         $roles = array_values(array_map(static fn ($r) => (string) $r, $payload['roles']));
 
+        $name = $payload['name'] ?? null;
+
         $appUser = null;
+
         if (isset($payload['appUser']) && $payload['appUser'] instanceof AppUserInterface) {
             $appUser = $payload['appUser'];
         }
 
-        return new self($username, $userId, $roles, $appUser);
+        return new self($username, $userId, $roles, $name, $appUser);
     }
 
     public function getUserIdentifier(): string
@@ -91,12 +91,17 @@ final class JWTUser implements JWTUserInterface
         return $this->userId;
     }
 
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
     public function getAppUser(): ?AppUserInterface
     {
         return $this->appUser;
     }
 
-    #[\Deprecated]
+    #[Deprecated]
     public function eraseCredentials(): void
     {
         // Intentionally left blank: no sensitive data stored on this user

@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace Azymuthia\SecurityBundle\Tests\Security;
 
-use Psr\Log\NullLogger;
-use PHPUnit\Framework\TestCase;
-use Symfony\Component\Uid\Uuid;
 use Azymuthia\SecurityBundle\Contract\AppUserInterface;
+use Azymuthia\SecurityBundle\Contract\AppUserRepositoryInterface;
 use Azymuthia\SecurityBundle\Security\JwtEventSubscriber;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTDecodedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTInvalidEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTNotFoundEvent;
-use Azymuthia\SecurityBundle\Contract\AppUserRepositoryInterface;
+use PHPUnit\Framework\TestCase;
+use Psr\Log\NullLogger;
+use RuntimeException;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Uid\Uuid;
 
 /**
  * @internal
@@ -60,11 +61,12 @@ final class JwtEventSubscriberTest extends TestCase
 
     public function testOnJwtDecodedWithRepositoryDoesNotInjectEntity(): void
     {
-        $repo = new class implements AppUserRepositoryInterface {
+        $repo = new class implements AppUserRepositoryInterface
+        {
             public function getOneByUserId(Uuid $id): AppUserInterface
             {
                 // This would normally return a domain entity, but subscriber must not inject it into payload.
-                throw new class('Not found') extends \RuntimeException {};
+                throw new class('Not found') extends RuntimeException {};
             }
         };
 

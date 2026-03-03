@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Azymuthia\SecurityBundle;
 
-use Symfony\Component\HttpKernel\Bundle\Bundle;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Azymuthia\SecurityBundle\DependencyInjection\AzymuthiaSecurityExtension;
 use Azymuthia\SecurityBundle\DependencyInjection\Compiler\AppUserAutowirePass;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
+use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 final class AzymuthiaSecurityBundle extends Bundle
 {

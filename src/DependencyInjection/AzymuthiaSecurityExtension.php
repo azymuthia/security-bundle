@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Azymuthia\SecurityBundle\DependencyInjection;
 
+use Azymuthia\SecurityBundle\Contract\AppUserRepositoryInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
-use Azymuthia\SecurityBundle\Contract\AppUserRepositoryInterface;
+use Throwable;
 
 final class AzymuthiaSecurityExtension extends Extension
 {
@@ -21,9 +22,10 @@ final class AzymuthiaSecurityExtension extends Extension
 
         // Load services from PHP config file if present (optional, minimal bundle keeps it empty)
         $loader = new PhpFileLoader($container, new FileLocator(__DIR__ . '/../../config'));
+
         try {
             $loader->load('services.php');
-        } catch (\Throwable) {
+        } catch (Throwable) {
             // no-op for minimal skeleton
         }
     }

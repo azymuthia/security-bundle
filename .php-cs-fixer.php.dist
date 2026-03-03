@@ -1,0 +1,118 @@
+<?php
+
+declare(strict_types=1);
+
+use PhpCsFixer\Config;
+use PhpCsFixer\Finder;
+use PhpCsFixer\Runner\Parallel\ParallelConfigFactory;
+
+$finder = Finder::create()
+    ->in(__DIR__)
+    ->exclude(['bin', 'var', 'vendor', 'docker', 'public']) // 'exclude' accepts arrays now
+    ->notPath('public/index.php')
+    ->notPath('config/secrets')
+    ->notName('bundles.php')
+    ->notName('reference.php')
+    ->name('*.php')
+    ->ignoreDotFiles(true)
+    ->ignoreVCS(true)
+    ->ignoreVCSIgnored(true)
+;
+
+return new Config()
+    ->setParallelConfig(ParallelConfigFactory::detect())
+    ->setCacheFile(__DIR__ . '/.php_cs.cache')
+    ->setRiskyAllowed(true)
+    ->setRules([
+        // ---------------------------------------------------
+        // Rule Sets
+        // ---------------------------------------------------
+        '@PER-CS' => true,        // The modern replacement for PSR-12
+        '@PER-CS:risky' => true,        // The modern replacement for PSR-12
+        '@Symfony' => true,          // Standard Symfony conventions
+        '@Symfony:risky' => true,    // Risky Symfony rules (like is_null -> === null)
+        '@PHP8x5Migration' => true,   // Modernizes code to PHP 8.4 standards
+        '@PHP8x5Migration:risky' => true, // Enforces void return, modern implodes, etc.
+        '@PhpCsFixer' => true,
+        '@PhpCsFixer:risky' => true,
+
+        // ---------------------------------------------------
+        // Modernization & Strictness
+        // ---------------------------------------------------
+        'declare_strict_types' => true, // Enforce strict types in all files
+        'strict_param' => true,         // in_array($a, $b, true)
+        'strict_comparison' => true,    // === vs ==
+        'void_return' => true,          // Add :void return types where applicable
+        'use_arrow_functions' => true,  // Convert simple closures to arrow functions
+        'static_lambda' => true,        // Add 'static' to lambdas not using $this (perf boost)
+        'modernize_strpos' => true,     // strpos(...) !== false
+        'date_time_immutable' => true,  // Prefer DateTimeImmutable over DateTime
+
+        // ---------------------------------------------------
+        // Imports & Namespaces
+        // ---------------------------------------------------
+        'global_namespace_import' => [
+            'import_classes' => true,
+            'import_constants' => true,
+            'import_functions' => true, // Improves opcode performance
+        ],
+        'ordered_imports' => [
+            'sort_algorithm' => 'alpha',
+            'imports_order' => ['class', 'function', 'const'],
+        ],
+        'no_unused_imports' => true,
+
+        // ---------------------------------------------------
+        // Formatting & Style Overrides
+        // ---------------------------------------------------
+        'concat_space' => ['spacing' => 'one'],
+        'yoda_style' => false,
+
+        // Arrays
+        'array_syntax' => ['syntax' => 'short'],
+        'trailing_comma_in_multiline' => [
+            'elements' => ['arrays', 'arguments', 'parameters', 'match'],
+        ],
+
+        // PHP Docs
+        'phpdoc_to_comment' => false, // Required for Doctrine/Symfony annotations to work
+        'phpdoc_align' => ['align' => 'left'], // Aligns tags vertically (cleaner diffs)
+        'phpdoc_summary' => false,
+        'no_superfluous_phpdoc_tags' => [
+            'allow_mixed' => true,
+            'remove_inheritdoc' => true,
+        ],
+
+        // Comments
+        'single_line_comment_style' => ['comment_types' => ['hash']],
+
+        // Operators
+        'binary_operator_spaces' => [
+            'default' => 'single_space',
+            'operators' => ['=>' => null], // Align double arrows if you prefer, or set to 'single_space'
+        ],
+        'operator_linebreak' => ['only_booleans' => true],
+
+        // Control Structures
+        // 'braces' is deprecated. These replace it:
+        'control_structure_braces' => true,
+        'control_structure_continuation_position' => ['position' => 'same_line'],
+        'braces_position' => [
+            'control_structures_opening_brace' => 'same_line',
+            'functions_opening_brace' => 'next_line_unless_newline_at_signature_end',
+            'anonymous_classes_opening_brace' => 'next_line_unless_newline_at_signature_end',
+        ],
+        'statement_indentation' => true,
+
+        // Whitespace
+        'method_argument_space' => [
+            'on_multiline' => 'ensure_fully_multiline',
+            'keep_multiple_spaces_after_comma' => false,
+        ],
+        'blank_line_before_statement' => [
+            'statements' => ['return', 'throw', 'try', 'if', 'while', 'for', 'foreach', 'switch'],
+        ],
+        'explicit_string_variable' => false,
+    ])
+    ->setFinder($finder)
+;
