@@ -78,6 +78,11 @@ final class JWTUser implements JWTUserInterface
         return $this->username;
     }
 
+    public function getUserIdentifier(): string
+    {
+        return $this->getUsername();
+    }
+
     /**
      * @return string[]
      */
