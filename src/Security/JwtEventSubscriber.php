@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Azymuthia\SecurityBundle\Security;
 
 use Azymuthia\SecurityBundle\Contract\AppUserRepositoryInterface;
+use Azymuthia\SecurityBundle\Event\UserIdDecodedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTDecodedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTInvalidEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTNotFoundEvent;
@@ -12,6 +13,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Events;
 use Lexik\Bundle\JWTAuthenticationBundle\Events as JWTEvents;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -26,6 +28,7 @@ final readonly class JwtEventSubscriber implements EventSubscriberInterface
     /** @param iterable<AppUserRepositoryInterface> $appUserRepositories */
     public function __construct(
         private UrlGeneratorInterface $urls,
+        private EventDispatcher $eventDispatcher,
         private iterable $appUserRepositories = [],
         private ?LoggerInterface $logger = null,
     ) {}
@@ -56,6 +59,8 @@ final readonly class JwtEventSubscriber implements EventSubscriberInterface
 
         try {
             $userId = $userIdRaw instanceof Uuid ? $userIdRaw : Uuid::fromString((string) $userIdRaw);
+
+            $this->eventDispatcher->dispatch(new UserIdDecodedEvent($userId));
         } catch (Throwable) {
             // invalid UUID – ignore
             $this->logger?->debug('JWT payload has invalid userId; skipping appUser enrichment', ['userId' => $userIdRaw]);
