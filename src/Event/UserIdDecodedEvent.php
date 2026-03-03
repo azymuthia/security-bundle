@@ -10,5 +10,6 @@ final class UserIdDecodedEvent
 {
     public function __construct(
         public readonly Uuid $userId,
+        public readonly ?string $name,
     ) {}
 }

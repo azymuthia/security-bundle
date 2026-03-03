@@ -59,7 +59,7 @@ final readonly class JwtEventSubscriber implements EventSubscriberInterface
         try {
             $userId = $userIdRaw instanceof Uuid ? $userIdRaw : Uuid::fromString((string) $userIdRaw);
 
-            $this->eventDispatcher->dispatch(new UserIdDecodedEvent($userId));
+            $this->eventDispatcher->dispatch(new UserIdDecodedEvent($userId, $payload['name'] ?? null));
         } catch (Throwable) {
             // invalid UUID – ignore
             $this->logger?->debug('JWT payload has invalid userId; skipping appUser enrichment', ['userId' => $userIdRaw]);
