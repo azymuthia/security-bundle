@@ -15,11 +15,6 @@ final class AzymuthiaSecurityExtension extends Extension
 {
     public function load(array $configs, ContainerBuilder $container): void
     {
-        // Enable autoconfiguration for AppUserRepositoryInterface implementations
-        $container->registerForAutoconfiguration(AppUserRepositoryInterface::class)
-            ->addTag('azymuthia.security.app_user_repository')
-        ;
-
         // Load services from the PHP config file if present (optional, minimal bundle keeps it empty)
         $loader = new PhpFileLoader($container, new FileLocator(__DIR__ . '/../../config'));
 

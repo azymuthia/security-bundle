@@ -15,12 +15,4 @@ return static function (ContainerConfigurator $config): void {
         ->autoconfigure()
         ->private()
     ;
-
-    // Register the JWT event subscriber
-    $services->set(JwtEventSubscriber::class)
-        ->public()
-        ->tag('kernel.event_subscriber')
-        // ensure the iterable argument receives tagged iterator; CompilerPass also enforces this
-        ->arg('$appUserRepositories', new TaggedIteratorArgument('azymuthia.security.app_user_repository', null, null, true))
-    ;
 };

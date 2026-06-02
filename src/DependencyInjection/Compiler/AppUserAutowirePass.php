@@ -16,21 +16,5 @@ final class AppUserAutowirePass implements CompilerPassInterface
 
     public function process(ContainerBuilder $container): void
     {
-        if (!$container->hasDefinition(JwtEventSubscriber::class) && !$container->hasAlias(JwtEventSubscriber::class)) {
-            return; // Subscriber not registered yet
-        }
-
-        $definition = $container->findDefinition(JwtEventSubscriber::class);
-
-        // Ensure the second constructor argument (iterable repositories) receives tagged iterator.
-        // We use named argument if available otherwise index 1 (0-based: [urls, appUserRepositories]).
-        $tagged = new TaggedIteratorArgument('azymuthia.security.app_user_repository', null, null, true);
-
-        // Try set by argument name first
-        if (method_exists($definition, 'setArgument')) {
-            $definition->setArgument('$appUserRepositories', $tagged);
-        } else {
-            $definition->replaceArgument(1, $tagged);
-        }
     }
 }

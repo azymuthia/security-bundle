@@ -11,6 +11,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTInvalidEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTNotFoundEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Events as JWTEvents;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -28,6 +29,7 @@ final readonly class JwtEventSubscriber implements EventSubscriberInterface
     public function __construct(
         private UrlGeneratorInterface $urls,
         private EventDispatcherInterface $eventDispatcher,
+        #[AutowireIterator('azymuthia.security.app_user_repository')]
         private iterable $appUserRepositories = [],
         private ?LoggerInterface $logger = null,
     ) {}
