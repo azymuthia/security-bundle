@@ -12,7 +12,6 @@ use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTNotFoundEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Events as JWTEvents;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
-use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -20,9 +19,6 @@ use Symfony\Component\Uid\Uuid;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Throwable;
 
-#[AsEventListener(event: JWTEvents::JWT_DECODED, method: 'onJwtDecoded')]
-#[AsEventListener(event: JWTEvents::JWT_INVALID, method: 'onJwtInvalid')]
-#[AsEventListener(event: JWTEvents::JWT_NOT_FOUND, method: 'onJwtNotFound')]
 final readonly class JwtEventSubscriber implements EventSubscriberInterface
 {
     /** @param iterable<AppUserRepositoryInterface> $appUserRepositories */

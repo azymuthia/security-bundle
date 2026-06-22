@@ -13,6 +13,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTNotFoundEvent;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use RuntimeException;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Uid\Uuid;
 
@@ -84,6 +85,8 @@ final class JwtEventSubscriberTest extends TestCase
         $urls = $this->createMock(UrlGeneratorInterface::class);
         $urls->method('generate')->willReturnCallback(static fn (string $route) => '/' . $route);
 
-        return new JwtEventSubscriber($urls, $repos, new NullLogger());
+        $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
+
+        return new JwtEventSubscriber($urls, $eventDispatcher, $repos, new NullLogger());
     }
 }

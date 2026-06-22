@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Azymuthia\SecurityBundle\Security\JwtEventSubscriber;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
 return static function (ContainerConfigurator $config): void {
@@ -13,4 +14,6 @@ return static function (ContainerConfigurator $config): void {
         ->autoconfigure()
         ->private()
     ;
+
+    $services->set(JwtEventSubscriber::class);
 };
