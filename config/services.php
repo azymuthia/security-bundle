@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Azymuthia\SecurityBundle\Logout\BackChannelLogoutClient;
 use Azymuthia\SecurityBundle\Security\JwtEventSubscriber;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
@@ -16,4 +17,8 @@ return static function (ContainerConfigurator $config): void {
     ;
 
     $services->set(JwtEventSubscriber::class);
+
+    $services->set(BackChannelLogoutClient::class)
+        ->arg('$logoutEndpoint', '%azymuthia_security.logout.endpoint%')
+    ;
 };

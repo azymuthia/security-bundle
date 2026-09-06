@@ -3,3 +3,4 @@ services:
     image: caelumek/frankenphp:8.5-dev
     volumes:
       - ./:/app
+      - ../cross-app-bundle:/cross-app-bundle

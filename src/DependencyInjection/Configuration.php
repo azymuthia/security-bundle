@@ -15,7 +15,12 @@ final class Configuration implements ConfigurationInterface
 
         $treeBuilder->getRootNode()
             ->children()
-                // Keep configuration minimal for now; extend later as needed
+            ->arrayNode('logout')
+            ->addDefaultsIfNotSet()
+            ->children()
+            ->scalarNode('endpoint')->defaultValue('/api/cross-app/logout')->end()
+            ->end()
+            ->end()
             ->end()
         ;
 
