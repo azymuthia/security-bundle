@@ -32,10 +32,11 @@ handles them → `JWTUser::createFromPayload()` (`src/Security/JWTUser.php`) reb
   registers `AppUserAutowirePass` (`src/DependencyInjection/Compiler/AppUserAutowirePass.php`), which currently has
   an empty `process()` body — don't assume it does anything beyond the autoconfiguration tag.
 - **Extension/config**: `AzymuthiaSecurityExtension` (alias `azymuthia_security`) processes `Configuration`
-  (an `exit_url` string defaulting to `%env(SECURITY_EXIT_URL)%`, plus GEN-17's unrelated `logout.endpoint`
-  node) into container parameters,
-  then loads `config/services.php`, which enables autowire/autoconfigure/private-by-default and registers
-  `JwtEventSubscriber`/`BackChannelLogoutClient`.
+  (an `exit_url` string defaulting to `%env(SECURITY_EXIT_URL)%`) into a container parameter, then loads
+  `config/services.php`, which enables autowire/autoconfigure/private-by-default and registers
+  `JwtEventSubscriber`. A GEN-17 back-channel-logout client built on `azymuthia/cross-app-bundle` shipped
+  briefly in v0.2.0/v0.2.1 and was removed before any app adopted it in practice — its sole planned consumer
+  (EKS-103) was dropped in favor of exit-only logout (EKS-104), so cross-app-bundle is not a dependency here.
 - **`JwtEventSubscriber`** (`final readonly`, `src/Security/JwtEventSubscriber.php`) subscribes to three Lexik
   events:
   - `JWT_NOT_FOUND` → redirects to the configured `exit_url`.

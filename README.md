@@ -170,48 +170,6 @@ security:
 
 Przypomnienie: usuń lub wyłącz stary aplikacyjny JwtSubscriber (np. App\Application\EventSubscriber\JwtSubscriber). Bundle rejestruje własny JwtEventSubscriber automatycznie.
 
-## Back-channel logout client
-`Azymuthia\SecurityBundle\Logout\BackChannelLogoutClient` calls Security's authenticated back-channel logout
-endpoint and returns the login redirect URL, so your app doesn't have to hand-roll the HTTP call.
-
-It's built on `azymuthia/cross-app-bundle`'s client primitive: your app must also install that bundle and
-configure a `host_connections.security` entry with your app's Security-issued UUID/secret pair (see that
-bundle's README).
-
-```yaml
-# config/packages/azymuthia_cross_app.yaml
-azymuthia_cross_app:
-  host_connections:
-    security:
-      base_uri: '%env(SECURITY_BASE_URI)%'
-      uuid: '%env(SECURITY_CLIENT_UUID)%'
-      secret: '%env(SECURITY_CLIENT_SECRET)%'
-```
-
-Optionally override the endpoint path (defaults to `/api/cross-app/logout`):
-
-```yaml
-# config/packages/azymuthia_security.yaml
-azymuthia_security:
-  logout:
-    endpoint: '/api/cross-app/logout'
-```
-
-Usage:
-
-```php
-$redirectTo = $this->backChannelLogoutClient->requestLogout();
-
-if (null === $redirectTo) {
-    // Security was unreachable, errored, or returned a malformed response.
-    // Fall back to a local login page instead.
-}
-```
-
-`requestLogout()` never throws: any transport failure, non-2xx response, or missing/malformed `redirectTo`
-in the response body is logged (if a PSR-3 logger is available) and results in `null`, leaving the fallback
-to the caller.
-
 ## License
 Proprietary. See the root project license terms.
 

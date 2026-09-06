@@ -5,10 +5,8 @@
   "type": "symfony-bundle",
   "require": {
     "php": ">=8.4",
-    "azymuthia/cross-app-bundle": "*@dev",
     "lexik/jwt-authentication-bundle": "^3.0",
     "symfony/framework-bundle": "^7.4 || ^8.0",
-    "symfony/http-client-contracts": "^3.7",
     "symfony/security-bundle": "^7.4 || ^8.0",
     "symfony/uid": "^7.4 || ^8.0"
   },
@@ -18,15 +16,6 @@
     "phpunit/phpunit": "^12.0",
     "roave/security-advisories": "dev-latest"
   },
-  "repositories": [
-    {
-      "type": "path",
-      "url": "../cross-app-bundle",
-      "options": {
-        "symlink": true
-      }
-    }
-  ],
   "minimum-stability": "stable",
   "prefer-stable": true,
   "autoload": {

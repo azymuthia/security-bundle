@@ -18,7 +18,6 @@ final class AzymuthiaSecurityExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
 
         $container->setParameter('azymuthia_security.exit_url', $config['exit_url']);
-        $container->setParameter('azymuthia_security.logout.endpoint', $config['logout']['endpoint']);
 
         // Load services from the PHP config file if present (optional, minimal bundle keeps it empty)
         $loader = new PhpFileLoader($container, new FileLocator(__DIR__ . '/../../config'));
