@@ -32,7 +32,8 @@ handles them → `JWTUser::createFromPayload()` (`src/Security/JWTUser.php`) reb
   registers `AppUserAutowirePass` (`src/DependencyInjection/Compiler/AppUserAutowirePass.php`), which currently has
   an empty `process()` body — don't assume it does anything beyond the autoconfiguration tag.
 - **Extension/config**: `AzymuthiaSecurityExtension` (alias `azymuthia_security`) processes `Configuration`
-  (a required `exit_url` string, plus GEN-17's unrelated `logout.endpoint` node) into container parameters,
+  (an `exit_url` string defaulting to `%env(SECURITY_EXIT_URL)%`, plus GEN-17's unrelated `logout.endpoint`
+  node) into container parameters,
   then loads `config/services.php`, which enables autowire/autoconfigure/private-by-default and registers
   `JwtEventSubscriber`/`BackChannelLogoutClient`.
 - **`JwtEventSubscriber`** (`final readonly`, `src/Security/JwtEventSubscriber.php`) subscribes to three Lexik

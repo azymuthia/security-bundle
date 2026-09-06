@@ -45,13 +45,15 @@ security:
 ```
 
 ## Configuration
-`exit_url` is required. `JwtEventSubscriber` redirects here on both a missing and an invalid JWT — there's a
-single exit target, not separate `login`/`logout` routes:
+`JwtEventSubscriber` redirects to `exit_url` on both a missing and an invalid JWT — there's a single exit
+target, not separate `login`/`logout` routes. `exit_url` defaults to reading the `SECURITY_EXIT_URL` env var,
+so no config file is needed if your app already sets that (the common case). Override it explicitly only if
+you need a different config source:
 
 ```yaml
 # config/packages/azymuthia_security.yaml
 azymuthia_security:
-  exit_url: '%env(SECURITY_EXIT_URL)%'
+  exit_url: '%env(SECURITY_EXIT_URL)%'   # this is also the default; only needed to point elsewhere
 ```
 
 Your app no longer needs `login`/`logout` Symfony routes just to satisfy this bundle — those were only ever
