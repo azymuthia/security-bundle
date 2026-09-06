@@ -13,7 +13,7 @@ as a `symfony-bundle` Composer package autoloaded as `Azymuthia\SecurityBundle\`
 - Install dependencies: `composer install` (or `docker-compose run -T --rm app composer install`)
 - Run tests: `vendor/bin/phpunit` — note `phpunit/phpunit` is **not** declared in `composer.json` or vendored;
   this only works when PHPUnit is supplied by the consuming project/root, or added intentionally.
-- Run a single test: `vendor/bin/phpunit --filter testOnJwtDecodedMissingUserIdLeavesPayloadUntouched tests/Security/JwtEventSubscriberTest.php`
+- Run a single test: `vendor/bin/phpunit --filter testOnJwtNotFoundRedirectsToExitUrl tests/Security/JwtEventSubscriberTest.php`
 - Check coding style: `vendor/bin/php-cs-fixer fix --dry-run --diff`
 - Apply coding style: `vendor/bin/php-cs-fixer fix`
 - Normalize `composer.json`: `composer normalize --dry-run` / `composer normalize`
@@ -31,13 +31,18 @@ handles them → `JWTUser::createFromPayload()` (`src/Security/JWTUser.php`) reb
   `azymuthia.security.app_user_repository` — no manual service tags or attributes needed on the app side. It also
   registers `AppUserAutowirePass` (`src/DependencyInjection/Compiler/AppUserAutowirePass.php`), which currently has
   an empty `process()` body — don't assume it does anything beyond the autoconfiguration tag.
-- **Extension/config**: `AzymuthiaSecurityExtension` (alias `azymuthia_security`) loads `config/services.php`,
-  which enables autowire/autoconfigure/private-by-default and registers `JwtEventSubscriber`. `Configuration`
-  defines an intentionally empty config tree — don't add options without tests and docs.
+- **Extension/config**: `AzymuthiaSecurityExtension` (alias `azymuthia_security`) processes `Configuration`
+  (a required `exit_url` string, plus GEN-17's unrelated `logout.endpoint` node) into container parameters,
+  then loads `config/services.php`, which enables autowire/autoconfigure/private-by-default and registers
+  `JwtEventSubscriber`/`BackChannelLogoutClient`.
 - **`JwtEventSubscriber`** (`final readonly`, `src/Security/JwtEventSubscriber.php`) subscribes to three Lexik
   events:
-  - `JWT_NOT_FOUND` → redirects to the `login` route.
-  - `JWT_INVALID` → redirects to the `logout` route.
+  - `JWT_NOT_FOUND` → redirects to the configured `exit_url`.
+  - `JWT_INVALID` → redirects to the same `exit_url`. Both paths used to redirect to distinct named
+    `login`/`logout` Symfony routes generated via `UrlGeneratorInterface`, which forced every consuming app
+    to define host/scheme-matched routes purely to satisfy this bundle (see GEN-18) — removed as a deliberate
+    breaking change; this is why every consuming app previously required `login`/`logout` routes in their own
+    `config/routes.yaml`, and why apps still on `azymuthia/security-bundle` `^0.1` still need them.
   - `JWT_DECODED` → validates `payload['userId']` as a `Uuid`, dispatches `UserIdDecodedEvent`, then best-effort
     looks up the first repository from the `#[AutowireIterator('azymuthia.security.app_user_repository')]`
     collection and sets `payload['appUser']`. Every failure path (missing/invalid `userId`, no repository

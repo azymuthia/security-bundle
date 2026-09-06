@@ -14,7 +14,6 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Throwable;
@@ -23,7 +22,7 @@ final readonly class JwtEventSubscriber implements EventSubscriberInterface
 {
     /** @param iterable<AppUserRepositoryInterface> $appUserRepositories */
     public function __construct(
-        private UrlGeneratorInterface $urls,
+        private string $exitUrl,
         private EventDispatcherInterface $eventDispatcher,
         #[AutowireIterator('azymuthia.security.app_user_repository')]
         private iterable $appUserRepositories = [],
@@ -32,12 +31,12 @@ final readonly class JwtEventSubscriber implements EventSubscriberInterface
 
     public function onJwtNotFound(JWTNotFoundEvent $event): void
     {
-        $event->setResponse(new RedirectResponse($this->urls->generate('login')));
+        $event->setResponse(new RedirectResponse($this->exitUrl));
     }
 
     public function onJwtInvalid(JWTInvalidEvent $event): void
     {
-        $event->setResponse(new RedirectResponse($this->urls->generate('logout')));
+        $event->setResponse(new RedirectResponse($this->exitUrl));
     }
 
     public function onJwtDecoded(JWTDecodedEvent $event): void

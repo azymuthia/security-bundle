@@ -15,6 +15,7 @@ final class Configuration implements ConfigurationInterface
 
         $treeBuilder->getRootNode()
             ->children()
+            ->scalarNode('exit_url')->isRequired()->cannotBeEmpty()->end()
             ->arrayNode('logout')
             ->addDefaultsIfNotSet()
             ->children()

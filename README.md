@@ -44,6 +44,19 @@ security:
       jwt: ~   # provided by lexik/jwt-authentication-bundle
 ```
 
+## Configuration
+`exit_url` is required. `JwtEventSubscriber` redirects here on both a missing and an invalid JWT — there's a
+single exit target, not separate `login`/`logout` routes:
+
+```yaml
+# config/packages/azymuthia_security.yaml
+azymuthia_security:
+  exit_url: '%env(SECURITY_EXIT_URL)%'
+```
+
+Your app no longer needs `login`/`logout` Symfony routes just to satisfy this bundle — those were only ever
+there because `JwtEventSubscriber` used to generate absolute URLs from named routes.
+
 Notes:
 - Do NOT add manual service tags for your app user repositories. Autoconfiguration will automatically tag any implementation of Azymuthia\SecurityBundle\Contract\AppUserRepositoryInterface with `azymuthia.security.app_user_repository`.
 - If your application provides a repository implementing the interface above, the bundle will best‑effort attach `appUser` to the JWT payload during JWT decoding. If you don’t provide any repository, the bundle works in JWT‑only mode (no `appUser` attached).

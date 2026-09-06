@@ -14,7 +14,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use RuntimeException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Uid\Uuid;
 
 /**
@@ -24,22 +24,22 @@ use Symfony\Component\Uid\Uuid;
  */
 final class JwtEventSubscriberTest extends TestCase
 {
-    public function testOnJwtNotFoundRedirectsToLogin(): void
+    public function testOnJwtNotFoundRedirectsToExitUrl(): void
     {
         $subscriber = $this->subscriber();
-        $event = new JWTNotFoundEvent();
+        $event = new JWTNotFoundEvent(new AuthenticationException('not found'));
         $subscriber->onJwtNotFound($event);
         self::assertNotNull($event->getResponse());
-        self::assertSame('/login', $event->getResponse()->getTargetUrl());
+        self::assertSame('https://security.example.test/exit', $event->getResponse()->getTargetUrl());
     }
 
-    public function testOnJwtInvalidRedirectsToLogout(): void
+    public function testOnJwtInvalidRedirectsToExitUrl(): void
     {
         $subscriber = $this->subscriber();
-        $event = new JWTInvalidEvent('bad');
+        $event = new JWTInvalidEvent(new AuthenticationException('invalid'), null);
         $subscriber->onJwtInvalid($event);
         self::assertNotNull($event->getResponse());
-        self::assertSame('/logout', $event->getResponse()->getTargetUrl());
+        self::assertSame('https://security.example.test/exit', $event->getResponse()->getTargetUrl());
     }
 
     public function testOnJwtDecodedMissingUserIdLeavesPayloadUntouched(): void
@@ -82,11 +82,8 @@ final class JwtEventSubscriberTest extends TestCase
 
     private function subscriber(iterable $repos = []): JwtEventSubscriber
     {
-        $urls = $this->createMock(UrlGeneratorInterface::class);
-        $urls->method('generate')->willReturnCallback(static fn (string $route) => '/' . $route);
-
         $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
 
-        return new JwtEventSubscriber($urls, $eventDispatcher, $repos, new NullLogger());
+        return new JwtEventSubscriber('https://security.example.test/exit', $eventDispatcher, $repos, new NullLogger());
     }
 }

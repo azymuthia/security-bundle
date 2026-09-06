@@ -16,7 +16,9 @@ return static function (ContainerConfigurator $config): void {
         ->private()
     ;
 
-    $services->set(JwtEventSubscriber::class);
+    $services->set(JwtEventSubscriber::class)
+        ->arg('$exitUrl', '%azymuthia_security.exit_url%')
+    ;
 
     $services->set(BackChannelLogoutClient::class)
         ->arg('$logoutEndpoint', '%azymuthia_security.logout.endpoint%')
