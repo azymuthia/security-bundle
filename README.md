@@ -56,6 +56,34 @@ azymuthia_security:
   exit_url: '%env(SECURITY_EXIT_URL)%'   # this is also the default; only needed to point elsewhere
 ```
 
+### Bearer cookie name
+
+`bearer_cookie_name` is the name of the bearer cookie this application reads and writes. It defaults to
+reading the `BEARER_COOKIE_NAME` env var, which in turn defaults to `BEARER` — the production name — so
+applications that set nothing keep their current behaviour.
+
+Production and staging Aquila applications share a cookie domain: staging hosts are siblings of the
+production hosts under the same parent (`ekstraliga-staging.pazola.eu` beside `ekstraliga.pazola.eu`), so
+no narrower shared parent exists. The cookie **name** is therefore the only separator between deployments.
+A staging deployment must set `BEARER_COOKIE_NAME` to a staging-specific value, or it will read and
+overwrite production sessions.
+
+Reference the parameter from your Lexik configuration, in **both** places the cookie name appears:
+
+```yaml
+# config/packages/lexik_jwt_authentication.yaml
+lexik_jwt_authentication:
+    set_cookies:
+      - name: '%azymuthia_security.bearer_cookie_name%'
+    token_extractors:
+        cookie:
+            enabled: true
+            name: '%azymuthia_security.bearer_cookie_name%'
+```
+
+The Security service that issues the cookie refuses to boot when a non-production deployment keeps the
+production name; see `APP_DEPLOYMENT_ENV` in the `aquila/security` repository.
+
 Your app no longer needs `login`/`logout` Symfony routes just to satisfy this bundle — those were only ever
 there because `JwtEventSubscriber` used to generate absolute URLs from named routes.
 

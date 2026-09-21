@@ -16,6 +16,7 @@ final class Configuration implements ConfigurationInterface
         $treeBuilder->getRootNode()
             ->children()
             ->scalarNode('exit_url')->defaultValue('%env(SECURITY_EXIT_URL)%')->cannotBeEmpty()->end()
+            ->scalarNode('bearer_cookie_name')->defaultValue('%env(BEARER_COOKIE_NAME)%')->cannotBeEmpty()->end()
             ->end()
         ;
 

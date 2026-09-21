@@ -6,6 +6,7 @@ namespace Azymuthia\SecurityBundle\Tests\DependencyInjection;
 
 use Azymuthia\SecurityBundle\DependencyInjection\Configuration;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\Definition\Processor;
 
 /**
@@ -27,6 +28,27 @@ final class ConfigurationTest extends TestCase
         $config = $this->process(['exit_url' => 'https://security.example.test/exit']);
 
         self::assertSame('https://security.example.test/exit', $config['exit_url']);
+    }
+
+    public function testBearerCookieNameDefaultsToBearerCookieNameEnvVar(): void
+    {
+        $config = $this->process([]);
+
+        self::assertSame('%env(BEARER_COOKIE_NAME)%', $config['bearer_cookie_name']);
+    }
+
+    public function testBearerCookieNameCanBeOverridden(): void
+    {
+        $config = $this->process(['bearer_cookie_name' => 'BEARER_STAGING']);
+
+        self::assertSame('BEARER_STAGING', $config['bearer_cookie_name']);
+    }
+
+    public function testBearerCookieNameCannotBeEmpty(): void
+    {
+        $this->expectException(InvalidConfigurationException::class);
+
+        $this->process(['bearer_cookie_name' => '']);
     }
 
     /** @param array<string, mixed> $config */
