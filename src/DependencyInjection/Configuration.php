@@ -17,6 +17,7 @@ final class Configuration implements ConfigurationInterface
             ->children()
             ->scalarNode('exit_url')->defaultValue('%env(SECURITY_EXIT_URL)%')->cannotBeEmpty()->end()
             ->scalarNode('bearer_cookie_name')->defaultValue('%env(BEARER_COOKIE_NAME)%')->cannotBeEmpty()->end()
+            ->scalarNode('deployment_env')->defaultValue('%env(APP_DEPLOYMENT_ENV)%')->cannotBeEmpty()->end()
             ->end()
         ;
 

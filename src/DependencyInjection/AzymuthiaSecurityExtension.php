@@ -21,9 +21,11 @@ final class AzymuthiaSecurityExtension extends Extension
         // name is the only separator between them. Default to the production name so applications
         // that do not set the variable keep their current behaviour.
         $container->setParameter('env(BEARER_COOKIE_NAME)', 'BEARER');
+        $container->setParameter('env(APP_DEPLOYMENT_ENV)', 'prod');
 
         $container->setParameter('azymuthia_security.exit_url', $config['exit_url']);
         $container->setParameter('azymuthia_security.bearer_cookie_name', $config['bearer_cookie_name']);
+        $container->setParameter('azymuthia_security.deployment_env', $config['deployment_env']);
 
         // Load services from the PHP config file if present (optional, minimal bundle keeps it empty)
         $loader = new PhpFileLoader($container, new FileLocator(__DIR__ . '/../../config'));

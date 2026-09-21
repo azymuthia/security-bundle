@@ -7,6 +7,7 @@ namespace Azymuthia\SecurityBundle;
 use Azymuthia\SecurityBundle\Contract\AppUserRepositoryInterface;
 use Azymuthia\SecurityBundle\DependencyInjection\AzymuthiaSecurityExtension;
 use Azymuthia\SecurityBundle\DependencyInjection\Compiler\AppUserAutowirePass;
+use Azymuthia\SecurityBundle\DependencyInjection\Compiler\BearerCookiePolicyPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -23,6 +24,7 @@ final class AzymuthiaSecurityBundle extends Bundle
         ;
 
         $container->addCompilerPass(new AppUserAutowirePass());
+        $container->addCompilerPass(new BearerCookiePolicyPass());
     }
 
     public function getContainerExtension(): ?ExtensionInterface

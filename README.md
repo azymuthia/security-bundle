@@ -68,13 +68,11 @@ no narrower shared parent exists. The cookie **name** is therefore the only sepa
 A staging deployment must set `BEARER_COOKIE_NAME` to a staging-specific value, or it will read and
 overwrite production sessions.
 
-Reference the parameter from your Lexik configuration, in **both** places the cookie name appears:
+Reference the parameter from your Lexik configuration:
 
 ```yaml
 # config/packages/lexik_jwt_authentication.yaml
 lexik_jwt_authentication:
-    set_cookies:
-      - name: '%azymuthia_security.bearer_cookie_name%'
     token_extractors:
         cookie:
             enabled: true
@@ -83,6 +81,29 @@ lexik_jwt_authentication:
 
 The Security service that issues the cookie refuses to boot when a non-production deployment keeps the
 production name; see `APP_DEPLOYMENT_ENV` in the `aquila/security` repository.
+
+This bundle enforces the same rule here. Set `APP_DEPLOYMENT_ENV` for the deployment (it defaults to
+`prod`, so applications that set nothing are unaffected); a deployment naming itself anything else while
+keeping `BEARER` fails to build.
+
+### The bearer cookie is read-only here
+
+Only the Security identity provider issues the bearer cookie. A consuming application must *read* it and
+never write it, because every Aquila application shares the same cookie domain — an application that
+issues its own bearer cookie overwrites the sessions of every other application, production included.
+
+The bundle enforces this: configuring `lexik_jwt_authentication.set_cookies` fails the container build.
+Configure only the extractor:
+
+```yaml
+# config/packages/lexik_jwt_authentication.yaml
+lexik_jwt_authentication:
+    # NO set_cookies here - this application does not issue bearer cookies.
+    token_extractors:
+        cookie:
+            enabled: true
+            name: '%azymuthia_security.bearer_cookie_name%'
+```
 
 Your app no longer needs `login`/`logout` Symfony routes just to satisfy this bundle — those were only ever
 there because `JwtEventSubscriber` used to generate absolute URLs from named routes.
